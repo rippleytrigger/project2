@@ -1,0 +1,15 @@
+{% extends 'layout.html' %}
+
+{% block title %}
+    Welcome to Chatterroom!
+{% endblock %}
+
+{% block body %}
+    <h1>Welcome to Chatterroom!</h1>
+
+    <p> To continue, you must introduce a proper name. </p>
+
+    <label for="username-input"> Username: </label>
+    <input id="username-input" name="username-input" type="text"/>
+    <button type="button">Continue</button>
+{% endblock %}
