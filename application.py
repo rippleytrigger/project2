@@ -11,3 +11,8 @@ socketio = SocketIO(app)
 @app.route("/")
 def index():
     return render_template("index.html")
+
+@app.route("/chatrooms")
+def chats():
+    return render_template("chatrooms.html")
+  
