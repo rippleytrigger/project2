@@ -17,6 +17,9 @@
   border-top: 1px solid white;
   margin-bottom: 0;
 }
+.list-block .add-plus:before {
+  content: url(../uploads/plus-circle-solid.svg);
+}
 .list-block .username {
   padding: 0.75rem 1.25rem;
   display: flex;
@@ -65,6 +68,10 @@
 .room-block .chat-block .user-2 {
   background: #c1e0ff;
   align-self: flex-end;
+}
+.room-block .chat-block.global-rooms .msg-element {
+  width: 95%;
+  align-self: flex-start;
 }
 .room-block .msg-block form {
   display: flex;

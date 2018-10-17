@@ -21,6 +21,11 @@
         margin-bottom: 0;
     }
 
+    .add-plus:before
+    {
+        content: url(../uploads/plus-circle-solid.svg);
+    }
+
     .username
     {
         padding: 0.75rem 1.25rem;
@@ -84,6 +89,16 @@
         {
             background: #c1e0ff;
             align-self: flex-end
+        }
+
+
+        &.global-rooms
+        {
+            .msg-element
+            {
+                width: 95%;
+                align-self: flex-start;
+            }
         }
     }
 

@@ -15,4 +15,8 @@ def index():
 @app.route("/chatrooms")
 def chats():
     return render_template("chatrooms.html")
+
+@app.route("/chatrooms-global")
+def chats_global():
+    return render_template("chatrooms-global.html")
   
