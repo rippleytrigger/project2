@@ -16,6 +16,9 @@ app.config["SESSION_PERMANENT"] = True
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
+
+channels = []
+
 @app.route("/")
 def index():
     return render_template("index.html")
@@ -24,11 +27,11 @@ def index():
 def login():
     """ Log user with their username """
 
-    username = request.form.get('username')
+    username = request.form.get('username-input')
 
     session['username'] = username
 
-    return redirect("/messages")
+    return redirect("/messages", code=200)
 
 
 @app.route("/messages")
@@ -44,4 +47,8 @@ def chats():
 """
 
 
-  
+@socketio.on("channel list")
+def vote(data):
+    selection = data["selection"]
+    votes[selection] += 1
+    emit("vote totals", votes, broadcast=True)
