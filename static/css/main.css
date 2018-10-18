@@ -34,7 +34,7 @@
 }
 .list-block .add-plus::before {
   content: url(../uploads/plus-circle-solid.svg);
-  padding-right: 20px;
+  padding-right: 14px;
 }
 .list-block a {
   padding: 0.35rem 1.25rem;
@@ -90,6 +90,52 @@
   flex: 1;
   border: 0;
   border-bottom: 1px solid;
+}
+
+.welcome-block {
+  height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  overflow: hidden;
+  background: #3d7eaa;
+  /* fallback for old browsers */
+  background: -webkit-linear-gradient(to right, #3d7eaa, #ffe47a);
+  /* Chrome 10-25, Safari 5.1-6 */
+  background: linear-gradient(to right, #3d7eaa, #ffe47a);
+  /* W3C, IE 10+/ Edge, Firefox 16+, Chrome 26+, Opera 12+, Safari 7+ */
+}
+.welcome-block h3 {
+  font-weight: 800;
+}
+.welcome-block p {
+  font-weight: 300;
+}
+.welcome-block input {
+  border: 0;
+  border-bottom: 1px solid;
+  border-bottom: 1px solid #28a745;
+  margin: 0 auto;
+  margin-bottom: 2rem;
+  color: #28a745;
+  background: transparent;
+  max-width: 200px;
+}
+.welcome-block button {
+  max-width: 580px;
+  width: 100%;
+  border-radius: 0;
+  transition: color 0.15s ease-in-out, background-color 0.35s ease-in-out, border-color 0.25s ease-in-out, box-shadow 0.15s ease-in-out;
+}
+.welcome-block .welcome-container {
+  background: white;
+  padding: 2rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  text-align: center;
+  color: #28a745;
+  min-width: 450px;
 }
 
 /*# sourceMappingURL=main.css.map */

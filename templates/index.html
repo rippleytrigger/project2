@@ -4,14 +4,22 @@
     Welcome to Chatterroom!
 {% endblock %}
 
+{% block styles %}
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/latest/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/animate.css')}}">
+{% endblock %}
+
 {% block body %}
-    <div class="main-content">
-        <h1>Welcome to Chatterroom!</h1>
+    <div class="welcome-block">
+        <div class="welcome-container">
+            <h3>Welcome to Chatterroom!</h3>
 
-        <p> To continue, you must introduce a proper name. </p>
-
-        <label for="username-input"> Username: </label>
-        <input id="username-input" name="username-input" type="text"/>
-        <button type="button">Continue</button>
+            <p> To continue, you must introduce a proper name. </p>
+        
+            <label for="username-input"> Username: </label>
+            <input id="username-input" name="username-input" type="text"/>
+            <button type="button" class="btn btn-outline-success">Continue</button>
+        </div>
     </div>
 {% endblock %}
