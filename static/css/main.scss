@@ -21,11 +21,6 @@
         margin-bottom: 0;
     }
 
-    /*.add-plus:before
-    {
-        content: url(../uploads/plus-circle-solid.svg);
-    }*/
-
     .username
     {
         padding: 0.75rem 1.25rem;
@@ -51,6 +46,13 @@
             content: url(../uploads/plus-circle-solid.svg);
             padding-right: 20px;
         }
+    }
+
+    a
+    {
+        padding: 0.35rem 1.25rem;
+        color: white;
+        text-decoration: none;
     }
 
     .list-group-item

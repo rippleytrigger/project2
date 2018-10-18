@@ -12,10 +12,6 @@
   height: 100vh;
   border-right: 1px solid rgba(0, 0, 0, 0.125);
   color: white;
-  /*.add-plus:before
-  {
-      content: url(../uploads/plus-circle-solid.svg);
-  }*/
 }
 .list-block hr {
   border-top: 1px solid white;
@@ -39,6 +35,11 @@
 .list-block .add-plus::before {
   content: url(../uploads/plus-circle-solid.svg);
   padding-right: 20px;
+}
+.list-block a {
+  padding: 0.35rem 1.25rem;
+  color: white;
+  text-decoration: none;
 }
 .list-block .list-group-item {
   background: none;
