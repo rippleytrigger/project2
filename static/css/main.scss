@@ -9,7 +9,7 @@
 
 .list-block
 {
-    flex: 1;
+    width: 220px;
     background:  #2c3e50;
     height: 100vh;
     border-right: 1px solid rgba(0,0,0,.125);
@@ -21,10 +21,10 @@
         margin-bottom: 0;
     }
 
-    .add-plus:before
+    /*.add-plus:before
     {
         content: url(../uploads/plus-circle-solid.svg);
-    }
+    }*/
 
     .username
     {
@@ -39,6 +39,17 @@
             background-color: lightgreen;
             border-radius: 50%;
             margin-right: 5px;
+        }
+    }
+
+    .add-plus
+    {
+        float: right;
+
+        &::before
+        {
+            content: url(../uploads/plus-circle-solid.svg);
+            padding-right: 20px;
         }
     }
 
