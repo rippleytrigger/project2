@@ -1,6 +1,4 @@
-
-
-// Select welcome-container
+/* This JS is only for being applied to the index.html */
 
 function wobbleTheContainer(event)
 {

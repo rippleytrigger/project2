@@ -16,10 +16,12 @@
             <h3>Welcome to Chatterroom!</h3>
 
             <p> To continue, you must introduce a proper name. </p>
-        
-            <label for="username-input"> Username: </label>
-            <input id="username-input" name="username-input" type="text"/>
-            <button type="button" class="btn btn-outline-success">Continue</button>
+            
+            <form action="{{ url_for('login') }}" method="POST">
+                <label for="username-input"> Username: </label>
+                <input id="username-input" name="username-input" type="text" />
+                <button type="submit" class="btn btn-outline-success">Continue</button>
+            </form>
         </div>
     </div>
 {% endblock %}
