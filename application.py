@@ -19,9 +19,27 @@ Session(app)
 
 channels = []
 
+users = []
+
 @app.route("/")
 def index():
+    # Redirect user to messages if connected
+    if session.get("username"):
+        return redirect("/messages")
+
     return render_template("index.html")
+
+
+@app.route("/logout")
+def logout():
+    """Log user out"""
+
+    # Forget any user_id
+    session.clear()
+
+    # Redirect user to login form
+    return redirect("/")
+
 
 @app.route("/login", methods = ['POST'])
 def login():
@@ -31,13 +49,15 @@ def login():
 
     session['username'] = username
 
+    print(session)
+
     return redirect("/messages", code=200)
 
 
 @app.route("/messages")
 @login_required
 def chats_global():
-    return render_template("chatrooms-global.html")
+    return render_template("chatrooms.html")
 
 """
 @app.route("/chatrooms")
@@ -49,6 +69,14 @@ def chats():
 
 @socketio.on("channel list")
 def vote(data):
-    selection = data["selection"]
+    channel = data["channel"]
+    channels.append(channel)
+
+    emit("channels", channels, broadcast=True)
+
+
+@socketio.on("users")
+def vote(data):
+    channel = data["channel"]
     votes[selection] += 1
-    emit("vote totals", votes, broadcast=True)
+    emit("vote totals", votes, broadcast=False)
