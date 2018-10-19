@@ -33,11 +33,10 @@ def login():
 
     return redirect("/messages", code=200)
 
-
 @app.route("/messages")
 @login_required
 def chats_global():
-    return render_template("chatrooms-global.html")
+    return render_template("chatrooms.html")
 
 """
 @app.route("/chatrooms")
@@ -45,10 +44,13 @@ def chats_global():
 def chats():
     return render_template("chatrooms.html")
 """
-
+@socketio.on('connect')
+def test_connect():
+    emit("show channel list", channels, broadcast=True)
+    #emit('get channel list', {'data': channels })
 
 @socketio.on("channel list")
 def vote(data):
-    selection = data["selection"]
-    votes[selection] += 1
-    emit("vote totals", votes, broadcast=True)
+    channel = data["channel-name"]
+    channels.append(channel)
+    emit("show channel list", channels, broadcast=True)
