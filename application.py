@@ -37,7 +37,7 @@ def login():
 @app.route("/messages")
 @login_required
 def chats_global():
-    return render_template("chatrooms-global.html")
+    return render_template("chatrooms.html")
 
 """
 @app.route("/chatrooms")

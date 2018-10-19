@@ -11,6 +11,9 @@
         <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css')}}">
         {% endblock %}
 
+        {% block additional_head_tags %}
+        {% endblock %}
+
         <title>{% block title %} Chatteroom {% endblock %}</title>
     </head>
     <body>
