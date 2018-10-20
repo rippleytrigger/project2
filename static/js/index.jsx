@@ -1,43 +1,63 @@
 // with ES6 import
 import io from 'socket.io-client';
-import Handlebars from 'handlebars';
+import { Template } from '../js/template';
+import moment from 'moment'
 
 document.addEventListener('DOMContentLoaded', () => {
 
     // Connect to websocket
     let socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
 
-    // When connected, configure buttons
-    socket.on('connect', (data) => {
+    socket.on('connect', () => {
 
-        console.log(data)
-
-        // Each button should emit a "submit vote" event
         document.querySelectorAll('.add-plus').forEach(element => {
             element.onclick = () => {
-                console.log('Epale')
                 const channel = 'Epale';
-                socket.emit('channel list', {'channel-name': channel});
+                const url = '/epale'
+                socket.emit('set channel list', {'channel_name': channel, 'channel_url': url});
             };
         });
     });
 
     socket.on('show channel list', (data) => {
+        Template.listTemplate(data)
 
-        for (let elem in data)
-        {
-            template = Handlebars.compile("<li class='list-group-item'> {{ elem }} </li>");
-        }
-            
-        Handlebars.registerHelper('list', function(data) {
+        let channel_list = document.querySelectorAll('.rooms-url');
+        
+        channel_list.forEach(element => {    
 
-            let element = '';
-          
-            for(var i=0, j=context.length; i<j; i++) {
-              ret = ret + options.fn(context[i]);
+            element.onclick = (event) => {
+
+                event.preventDefault()
+
+                const url = element.dataset.url;
+
+                history.pushState(null, '', '/messages'+ element.dataset.url );
+
+                socket.emit('get channel chat', {'channel_url': url});
             }
-          
-            return ret;
-        });
+        })
     })
+
+    socket.on('show channel chat', (data) => {
+        Template.msgTemplate(data) 
+    })
+
+    document.querySelector('.msg-block form').addEventListener('submit', (event) => {
+
+        event.preventDefault();
+
+        let message = event.target.querySelector('#chat-msg').value;
+        let timestamp = moment().format('h:mm:ss A')
+    
+        socket.emit('set channel msg', {'channel_url': '/epale' ,'message': message, 'timestamp': timestamp });
+        
+        event.target.reset()
+    })
+
 });
+
+
+
+
+

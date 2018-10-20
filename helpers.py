@@ -15,3 +15,12 @@ def login_required(f):
             return redirect("/")
         return f(*args, **kwargs)
     return decorated_function
+
+def get_requested_channel(url, channels):
+    for channel in channels:
+        if url == channel['channel_url']:
+            requested_channel = channel
+            print(requested_channel)
+            return requested_channel
+
+    return False
