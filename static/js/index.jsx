@@ -4,7 +4,7 @@ import { Template } from '../js/template';
 import moment from 'moment'
 
 
-function getStartingChannel(socketio)
+/*function getStartingChannel(socketio)
 {
     // This function only applies when the user selects a channel and then closes the window
     let startingPoint = localStorage.getItem('channel_url') != null ? localStorage.getItem('channel_url') : false; 
@@ -19,7 +19,7 @@ function getStartingChannel(socketio)
 
     // Get socketio class to emit an event
     socketio.emit('get channel chat', {'channel_url': startingPoint});
-}
+}*/
 
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -28,7 +28,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     socket.on('connect', () => {
 
-        getStartingChannel(socket);
+        //getStartingChannel(socket);
 
         // Display Create Channel form 
         document.querySelectorAll('.add-plus').forEach(element => {
