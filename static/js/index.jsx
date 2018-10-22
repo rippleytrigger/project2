@@ -3,6 +3,24 @@ import io from 'socket.io-client';
 import { Template } from '../js/template';
 import moment from 'moment'
 
+
+function getStartingChannel(socketio)
+{
+    // This function only applies when the user selects a channel and then closes the window
+    let startingPoint = localStorage.getItem('channel_url') != null ? localStorage.getItem('channel_url') : false; 
+
+    if(startingPoint == false)
+    {
+        return false
+    }
+        
+    //History Push State
+    history.pushState(null, '', '/messages'+ startingPoint );
+
+    // Get socketio class to emit an event
+    socketio.emit('get channel chat', {'channel_url': startingPoint});
+}
+
 document.addEventListener('DOMContentLoaded', () => {
 
     // Connect to websocket
@@ -10,11 +28,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
     socket.on('connect', () => {
 
+        getStartingChannel(socket);
+
+        // Display Create Channel form 
         document.querySelectorAll('.add-plus').forEach(element => {
             element.onclick = () => {
-                const channel = 'Epale';
-                const url = '/epale'
-                socket.emit('set channel list', {'channel_name': channel, 'channel_url': url});
+                document.querySelector('.create-channel-block').classList.add('active')
             };
         });
     });
@@ -32,6 +51,10 @@ document.addEventListener('DOMContentLoaded', () => {
 
                 const url = element.dataset.url;
 
+                //Store the channel url on localstorage
+                localStorage.setItem('channel_url', url);
+                
+                //History Push State
                 history.pushState(null, '', '/messages'+ element.dataset.url );
 
                 socket.emit('get channel chat', {'channel_url': url});
@@ -47,17 +70,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
         event.preventDefault();
 
-        let message = event.target.querySelector('#chat-msg').value;
-        let timestamp = moment().format('h:mm:ss A')
-    
-        socket.emit('set channel msg', {'channel_url': '/epale' ,'message': message, 'timestamp': timestamp });
+        if (localStorage.getItem('channel_url') != null)
+        {
+            let message = event.target.querySelector('#chat-msg').value;
+            let timestamp = moment().format('h:mm:ss A')
         
+            socket.emit('set channel msg', {'channel_url': localStorage.getItem('channel_url') ,'message': message, 'timestamp': timestamp });
+            
+            event.target.reset()
+        }
+        else
+        {
+            console.error('You have to do click to a room in order to send messages')
+        }
+
+    })
+
+    document.querySelector('.create-channel-block form').addEventListener('submit', (event) => {
+
+
+        event.preventDefault();
+
+        let channel = event.target.querySelector('#channel-name-input').value;
+    
+        socket.emit('set channel list', {'channel_url': `/${channel}` ,'channel_name': channel });
+        
+        document.querySelector('.create-channel-block').classList.remove('active')
+
         event.target.reset()
+
     })
 
 });
 
 
+document.querySelector('.close').addEventListener( 'click', () => {
+    document.querySelector('.create-channel-block').classList.remove('active')
+})
 
-
-
+window.addEventListener("close", function( event ) {
+    // make the close button ineffective
+    event.preventDefault();
+  }, false);

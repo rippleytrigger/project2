@@ -1,6 +1,6 @@
 import os
 
-from flask import Flask, render_template
+from flask import Flask, render_template, jsonify
 from flask_socketio import SocketIO, emit
 from flask_session import Session
 
@@ -19,9 +19,14 @@ Session(app)
 
 channels = []
 
+users = []
+
 @app.route("/")
 def index():
-    #if session['username']:
+
+    # If the user has already register his username, redirect him to the /messages route
+    if 'username' in session:
+        return redirect("/messages", code=200)
 
     return render_template("index.html")
 
@@ -31,7 +36,11 @@ def login():
 
     username = request.form.get('username-input')
 
-    session['username'] = username
+    if not username in users:
+        session['username'] = username
+        users.append(username)
+    else:
+        return jsonify({'success': False, 'message': 'That username has already been picked. Choose another one'})
 
     return redirect("/messages", code=200)
 
@@ -45,9 +54,14 @@ def logout():
     # Redirect user to login form
     return redirect("/")
 
+@app.route("/messages/<string:channel_room>")
+@login_required
+def chats(channel_room):
+    return render_template("chatrooms.html", username = session['username'])
+
 @app.route("/messages")
 @login_required
-def chats():
+def chats_room():
     return render_template("chatrooms.html", username = session['username'])
 
 @socketio.on('connect')
@@ -57,11 +71,18 @@ def test_connect():
 
 @socketio.on("set channel list")
 def set_channel_list(data):
-    channel = data["channel_name"]
+    channel_name = data["channel_name"]
     url = data["channel_url"]
-    channels.append({'channel_name': channel, 'channel_url': url, 'channel_msg': []})
-    emit("show channel list", channels, broadcast=True)
 
+    if len(channels) == 0:
+        channels.append({'channel_name': channel_name, 'channel_url': url, 'channel_msg': []})
+        emit("show channel list", channels, broadcast=True)
+
+    if not channel in channels.channel_name:
+        channels.append({'channel_name': channel_name, 'channel_url': url, 'channel_msg': []})
+        emit("show channel list", channels, broadcast=True)
+    else:
+        return jsonify({'success': False, 'message': 'That channel has already been picked. Choose another one'})
 
 @socketio.on("get channel chat")
 def get_channel_chat(data):
