@@ -36,6 +36,8 @@ def login():
 
     username = request.form.get('username-input')
 
+    print(users)
+
     if not username in users:
         session['username'] = username
         users.append(username)
@@ -78,11 +80,13 @@ def set_channel_list(data):
         channels.append({'channel_name': channel_name, 'channel_url': url, 'channel_msg': []})
         emit("show channel list", channels, broadcast=True)
 
-    if not channel in channels.channel_name:
-        channels.append({'channel_name': channel_name, 'channel_url': url, 'channel_msg': []})
-        emit("show channel list", channels, broadcast=True)
-    else:
-        return jsonify({'success': False, 'message': 'That channel has already been picked. Choose another one'})
+    for channel in channels:
+        if  channel_name in channel['channel_name']:
+            return jsonify({'success': False, 'message': 'That channel has already been picked. Choose another one'})
+
+    # It is not duplicated
+    channels.append({'channel_name': channel_name, 'channel_url': url, 'channel_msg': []})
+    emit("show channel list", channels, broadcast=True)
 
 @socketio.on("get channel chat")
 def get_channel_chat(data):
