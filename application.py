@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask, render_template, jsonify
-from flask_socketio import SocketIO, emit
+from flask_socketio import SocketIO, emit, send
 from flask_session import Session
 
 # Import helper Functions
@@ -20,6 +20,8 @@ Session(app)
 channels = []
 
 users = []
+
+channel_msg_limit = 100
 
 @app.route("/")
 def index():
@@ -48,7 +50,7 @@ def login():
 def logout():
     """Log user out"""
 
-    # Forget any user_id
+    # Forget any username
     session.clear()
 
     # Redirect user to login form
@@ -61,11 +63,11 @@ def chats(channel_room):
 
 @app.route("/messages")
 @login_required
-def chats_room():
+def get_app_view():
     return render_template("chatrooms.html", username = session['username'])
 
 @socketio.on('connect')
-def test_connect():
+def get_channel_list():
     emit("show channel list", channels, broadcast=True)
 
 @socketio.on("set channel list")
@@ -80,7 +82,7 @@ def set_channel_list(data):
     for channel in channels:
         if  channel_name in channel['channel_name']:
             emit("show error in chat",({'success': False, 'message': 'That channel has already been picked. Use another name'}), broadcast= False)
-            return False;
+            return False
 
     # It is not duplicated
     channels.append({'channel_name': channel_name, 'channel_url': url, 'channel_msg': []})
@@ -103,6 +105,10 @@ def set_channel_msgs(data):
     username = session['username']
     message = data["message"]
     timestamp = data["timestamp"]
+
+    if len(requested_channel["channel_msg"]) >= channel_msg_limit:
+        # Delete the oldest message on the list
+        requested_channel["channel_msg"].pop(0)
 
     requested_channel['channel_msg'].append({'username': username, 'message': message, 'timestamp': timestamp})
     emit("show channel chat", requested_channel, broadcast=False)

@@ -92,7 +92,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     document.querySelector('.create-channel-block form').addEventListener('submit', (event) => {
 
-
         event.preventDefault();
 
         let channel = event.target.querySelector('#channel-name-input').value;
@@ -104,7 +103,6 @@ document.addEventListener('DOMContentLoaded', () => {
         event.target.reset()
 
     })
-
 });
 
 
