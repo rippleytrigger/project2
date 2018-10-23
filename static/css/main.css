@@ -80,6 +80,9 @@
   background: #c1e0ff;
   align-self: flex-end;
 }
+.room-block .chat-block .error-msg {
+  background: lightcoral;
+}
 .room-block .chat-block.global-rooms .msg-element {
   width: 95%;
   align-self: flex-start;

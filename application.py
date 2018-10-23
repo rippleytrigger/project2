@@ -36,8 +36,6 @@ def login():
 
     username = request.form.get('username-input')
 
-    print(users)
-
     if not username in users:
         session['username'] = username
         users.append(username)
@@ -69,7 +67,6 @@ def chats_room():
 @socketio.on('connect')
 def test_connect():
     emit("show channel list", channels, broadcast=True)
-    #emit('get channel list', {'data': channels })
 
 @socketio.on("set channel list")
 def set_channel_list(data):
@@ -82,18 +79,21 @@ def set_channel_list(data):
 
     for channel in channels:
         if  channel_name in channel['channel_name']:
-            return jsonify({'success': False, 'message': 'That channel has already been picked. Choose another one'})
+            emit("show error in chat",({'success': False, 'message': 'That channel has already been picked. Use another name'}), broadcast= False)
+            return False;
 
     # It is not duplicated
     channels.append({'channel_name': channel_name, 'channel_url': url, 'channel_msg': []})
     emit("show channel list", channels, broadcast=True)
+
 
 @socketio.on("get channel chat")
 def get_channel_chat(data):
 
     requested_channel  = get_requested_channel(data["channel_url"], channels)
 
-    emit("show channel chat", requested_channel, broadcast=True)
+    emit("show channel chat", requested_channel, broadcast=False)
+
 
 @socketio.on("set channel msg")
 def set_channel_msgs(data):
@@ -105,6 +105,6 @@ def set_channel_msgs(data):
     timestamp = data["timestamp"]
 
     requested_channel['channel_msg'].append({'username': username, 'message': message, 'timestamp': timestamp})
-    emit("show channel chat", requested_channel, broadcast=True)
+    emit("show channel chat", requested_channel, broadcast=False)
 
 

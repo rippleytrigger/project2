@@ -66,6 +66,10 @@ document.addEventListener('DOMContentLoaded', () => {
         Template.msgTemplate(data) 
     })
 
+    socket.on("show error in chat", (data) => {
+        Template.errorChatTemplate(data)
+    })
+
     document.querySelector('.msg-block form').addEventListener('submit', (event) => {
 
         event.preventDefault();

@@ -22,7 +22,6 @@ class template
 
         for (let msg of content.channel_msg)
         {
-            console.log(msg)
             template += 
             `<div class="msg-element user-1">
                 <small>${msg.username} ${msg.timestamp}</small>
@@ -31,6 +30,22 @@ class template
                 </p>
             </div>`;
         }
+
+        channelChat.innerHTML = template;
+    }
+
+    errorChatTemplate(content)
+    {
+        let channelChat = document.querySelector('.chat-block');
+
+        let template = '';
+
+        template += 
+        `<div class="msg-element error-msg">
+            <p>
+                    ${content.message}
+            </p>
+        </div>`;
 
         channelChat.innerHTML = template;
     }
