@@ -1,7 +1,7 @@
 import os
 
 from flask import Flask, render_template, jsonify
-from flask_socketio import SocketIO, emit, send
+from flask_socketio import SocketIO, emit, send, join_room, leave_room
 from flask_session import Session
 
 # Import helper Functions
@@ -40,7 +40,8 @@ def login():
 
     if not username in users:
         session['username'] = username
-        users.append(username)
+        session['channel'] = None
+        users.append({"username": username, "channel": None})
     else:
         return jsonify({'success': False, 'message': 'That username has already been picked. Choose another one'})
 
@@ -67,8 +68,15 @@ def get_app_view():
     return render_template("chatrooms.html", username = session['username'])
 
 @socketio.on('connect')
-def get_channel_list():
+def set_user_settings():
     emit("show channel list", channels, broadcast=True)
+
+    requested_user = get_requested_user(session['username'], users)
+
+    if requested_user['channel'] is not None:
+        emit("get user room", requested_user['channel'], broadcast=False)
+    else:
+        emit("clean user channel localStorage", broadcast=False)
 
 @socketio.on("set channel list")
 def set_channel_list(data):
@@ -111,6 +119,27 @@ def set_channel_msgs(data):
         requested_channel["channel_msg"].pop(0)
 
     requested_channel['channel_msg'].append({'username': username, 'message': message, 'timestamp': timestamp})
-    emit("show channel chat", requested_channel, broadcast=False)
+    emit("show channel chat", requested_channel, room = requested_channel["channel_name"])
+
+@socketio.on('join')
+def on_join(data):
+    username = session['username']  
+        
+    requested_user = get_requested_user(session['username'], users)
+    requested_user["channel"] = data['channel_name']
+    
+    room = data['channel_name']
+    join_room(room)
+    
+    # Get Chamnel Chat
+    requested_channel  = get_requested_channel(data["channel_url"], channels)
+    emit("show channel chat", requested_channel)
 
 
+@socketio.on('leave')
+def on_leave(data):
+    username = session['username']
+    session['channel'] = None
+    room = data['channel_name']
+    leave_room(room)
+    send(username + ' has left the room.', room=room)

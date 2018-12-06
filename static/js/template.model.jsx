@@ -1,5 +1,22 @@
-class template
+class Template
 {
+    constructor() {
+        this.eventsHandler();
+    }
+
+    eventsHandler() 
+    {
+        document.addEventListener('DOMContentLoaded', () => {
+
+            document.querySelectorAll('.add-plus').forEach( element => 
+            {
+                element.addEventListener( "click", this.getCreateChannelBlock);
+            })
+
+            document.querySelector('.create-channel-block .close').addEventListener("click", this.removeCreateChannelBlock);
+        })
+    }
+
     listTemplate(content)
     {
         let channels = document.querySelector('.list-group');
@@ -8,7 +25,8 @@ class template
 
         for (let elem in content)
         {
-            template += `<li class="list-group-item"><a href='' class='rooms-url' data-url='${content[elem]['channel_url']}'>${ content[elem]['channel_name']  }</a></li>`;
+            template += `<li class="list-group-item"><a href='' class='rooms-url'  data-channel='${content[elem]['channel_name']}' \
+            data-url='${content[elem]['channel_url']}'>${ content[elem]['channel_name']  }</a></li>`;
         }
         
         channels.innerHTML = template;
@@ -39,6 +57,7 @@ class template
         let channelChat = document.querySelector('.chat-block');
 
         let template = '';
+        
 
         template += 
         `<div class="msg-element error-msg">
@@ -49,10 +68,18 @@ class template
 
         channelChat.innerHTML = template;
     }
+
+    removeCreateChannelBlock()
+    {
+        document.querySelector('.create-channel-block').classList.remove('active')
+    }
+
+    getCreateChannelBlock() 
+    {
+        document.querySelector('.create-channel-block').classList.add('active')
+    }
 }
 
-const Template = new template();
-
-export { Template };
+export default Template;
 
 

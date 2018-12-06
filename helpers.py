@@ -20,7 +20,14 @@ def get_requested_channel(url, channels):
     for channel in channels:
         if url == channel['channel_url']:
             requested_channel = channel
-            print(requested_channel)
             return requested_channel
+
+    return False
+
+def get_requested_user(username, users):
+    for user in users:
+        if username == user['username']:
+            requested_user = user
+            return requested_user
 
     return False
