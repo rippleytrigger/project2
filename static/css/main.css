@@ -87,9 +87,23 @@
   width: 95%;
   align-self: flex-start;
 }
+.room-block .msg-block {
+  display: flex;
+}
 .room-block .msg-block form {
   display: flex;
   padding: 0.75rem 1.25rem;
+}
+.room-block .msg-block .text-msg {
+  flex: 1;
+}
+.room-block .msg-block .file-upload {
+  width: 45px;
+  display: flex;
+  justify-content: center;
+  font-size: 2em;
+  background: lightgreen;
+  cursor: pointer;
 }
 .room-block .msg-block input {
   flex: 1;
@@ -157,6 +171,48 @@
   left: 0%;
   width: 100%;
   height: 100vh;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.create-private-room-block {
+  display: none;
+}
+.create-private-room-block .close {
+  position: absolute;
+  top: 10%;
+  right: 10%;
+}
+.create-private-room-block.active {
+  position: absolute;
+  top: 0%;
+  left: 0%;
+  width: 100%;
+  height: 100vh;
+  background: white;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.file-upload-block {
+  display: none;
+}
+.file-upload-block .close {
+  position: absolute;
+  top: 10%;
+  right: 10%;
+}
+.file-upload-block.active {
+  position: absolute;
+  top: 25%;
+  left: 25%;
+  width: 50%;
+  height: 50vh;
   background: white;
   display: flex;
   flex-direction: column;

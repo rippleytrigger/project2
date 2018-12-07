@@ -40,12 +40,11 @@ def login():
 
     if not username in users:
         session['username'] = username
-        session['channel'] = None
         users.append({"username": username, "channel": None})
     else:
         return jsonify({'success': False, 'message': 'That username has already been picked. Choose another one'})
 
-    return redirect("/messages", code=200)
+    return redirect("/messages")
 
 @app.route("/logout", methods = ['GET'])
 def logout():
@@ -67,11 +66,23 @@ def chats(channel_room):
 def get_app_view():
     return render_template("chatrooms.html", username = session['username'])
 
+@app.route("/users")
+def get_users():
+    return jsonify({'success': True, 'message': users })
+
+@app.route("/upload/image", methods = ['POST'])
+def upload_image():
+    print(request.form)
+
 @socketio.on('connect')
 def set_user_settings():
     emit("show channel list", channels, broadcast=True)
 
     requested_user = get_requested_user(session['username'], users)
+
+    # Set User Room for private chats
+    room = requested_user['username']
+    join_room(room)
 
     if requested_user['channel'] is not None:
         emit("get user room", requested_user['channel'], broadcast=False)
@@ -86,10 +97,11 @@ def set_channel_list(data):
     if len(channels) == 0:
         channels.append({'channel_name': channel_name, 'channel_url': url, 'channel_msg': []})
         emit("show channel list", channels, broadcast=True)
+        return
 
     for channel in channels:
         if  channel_name in channel['channel_name']:
-            emit("show error in chat",({'success': False, 'message': 'That channel has already been picked. Use another name'}), broadcast= False)
+            emit("show error in chat", ({'success': False, 'message': 'That channel has already been picked. Use another name'}), broadcast= False)
             return False
 
     # It is not duplicated

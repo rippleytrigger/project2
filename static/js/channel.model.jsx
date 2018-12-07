@@ -33,6 +33,7 @@ class Channel{
 
             document.querySelector('.msg-block form').addEventListener('submit', this.SetChannelMsg.bind(this))
             document.querySelector('.create-channel-block form').addEventListener('submit', this.CreateChannelRoom.bind(this))
+            document.querySelector('.create-private-room-block form').addEventListener('submit', this.GetUserToChat.bind(this))
         })
     }
 
@@ -47,6 +48,10 @@ class Channel{
         document.querySelector('.create-channel-block').classList.remove('active')
 
         event.target.reset()
+    }
+
+    GetUserToChat(event) {
+        event.preventDefault();
     }
 
     SetChannelMsg(event) {

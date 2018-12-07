@@ -8,12 +8,16 @@ class Template
     {
         document.addEventListener('DOMContentLoaded', () => {
 
-            document.querySelectorAll('.add-plus').forEach( element => 
-            {
-                element.addEventListener( "click", this.getCreateChannelBlock);
-            })
+            document.querySelectorAll('.add-plus')[0].addEventListener( "click", this.getCreateChannelBlock);
+
+            document.querySelectorAll('.add-plus')[1].addEventListener( "click", this.getUsernameChatBlock);
 
             document.querySelector('.create-channel-block .close').addEventListener("click", this.removeCreateChannelBlock);
+
+            document.querySelector('.create-private-room-block .close').addEventListener("click", this.removeUsernameChatBlock);
+
+            document.querySelector('.file-upload').addEventListener('click', () => { document.querySelector('.file-upload-block').classList.add('active') })
+            document.querySelector('.file-upload-block .close').addEventListener('click', () => { document.querySelector('.file-upload-block').classList.remove('active') })
         })
     }
 
@@ -77,6 +81,25 @@ class Template
     getCreateChannelBlock() 
     {
         document.querySelector('.create-channel-block').classList.add('active')
+    }
+
+    getUsernameChatBlock() 
+    {
+        document.querySelector('.create-private-room-block').classList.add('active')
+
+        fetch("http://127.0.0.1:5000/users").then(function(data)
+        {
+            console.log(data)
+        })
+        .then( data =>
+        {
+            console.log(data)
+        })
+    }
+
+    removeUsernameChatBlock()
+    {
+        document.querySelector('.create-private-room-block').classList.remove('active')
     }
 }
 

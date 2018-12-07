@@ -36,14 +36,14 @@
 
         </div>
         <div  class="msg-block">
-            <form action="." method="POST">
-                <input type="text" id="chat-msg" placeholder="Type your Message"/>
-
-                <!-- 
-                <textarea id="chat-msg" placeholder="Type your Message" rows="4" cols="50">
-                    At w3schools.com you will learn how to make a website. We offer free tutorials in all web development technologies.
-                </textarea> -->
-            </form>
+            <div class="file-upload">
+                <span>+</span>
+            </div>
+            <div class="text-msg">
+                <form action="." method="POST">
+                    <input type="text" id="chat-msg" placeholder="Type your Message"/>
+                </form>
+            </div>
         </div>
     </div>
     <div class="create-channel-block">
@@ -54,6 +54,26 @@
             <h1> Put the name of the new channel: </h1>
             <input type="text" id="channel-name-input" />
             <button type="submit">Create Channel</button>
+        </form>
+    </div>
+    <div class="create-private-room-block">
+        <div class="header">
+            <span class="close"></span>
+        </div>
+        <form action="" method="POST">
+            <h1> Select the username who you want to send a message: </h1>
+            <select id="usernames"> 
+            </select>
+            <button type="submit">Choose a Username</button>
+        </form>
+    </div>
+    <div class="file-upload-block">
+        <div class="header">
+            <span class="close"></span>
+        </div>
+        <form enctype="multipart/form-data" action="/upload/image" method="post">
+            <input id="image-file" type="file" name="file" />
+            <button>Send File</button>
         </form>
     </div>
 </div>
