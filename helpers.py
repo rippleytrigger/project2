@@ -31,3 +31,4 @@ def get_requested_user(username, users):
             return requested_user
 
     return False
+

@@ -1,27 +1,39 @@
 import os
+import requests
 
 from flask import Flask, render_template, jsonify
 from flask_socketio import SocketIO, emit, send, join_room, leave_room
 from flask_session import Session
+from werkzeug.utils import secure_filename
 
 # Import helper Functions
 from helpers import *
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+
 socketio = SocketIO(app)
+
+APP_ROOT = os.path.dirname(os.path.abspath(__file__))
+UPLOAD_FOLDER = os.path.join(APP_ROOT, 'static/uploads')
+app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
+
+ALLOWED_EXTENSIONS = set(['txt', 'pdf', 'png', 'jpg', 'jpeg', 'gif'])
 
 # Configure session to use filesystem
 app.config["SESSION_PERMANENT"] = True
 app.config["SESSION_TYPE"] = "filesystem"
 Session(app)
 
-
 channels = []
 
 users = []
 
 channel_msg_limit = 100
+
+def allowed_file(filename):
+    return '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
 @app.route("/")
 def index():
@@ -72,7 +84,21 @@ def get_users():
 
 @app.route("/upload/image", methods = ['POST'])
 def upload_image():
-    print(request.form)
+    # check if the post request has the file part
+        if 'file' not in request.files:
+            flash('No file part')
+            return redirect(request.url)
+        file = request.files['file']
+        # if user does not select file, browser also
+        # submit an empty part without filename
+        if file.filename == '':
+            flash('No selected file')
+            #return redirect(request.url)
+        if file and allowed_file(file.filename):
+            filename = secure_filename(file.filename)
+            file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
+            #return redirect(url_for('uploaded_file',
+            #                        filename=filename))
 
 @socketio.on('connect')
 def set_user_settings():
