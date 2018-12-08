@@ -1,6 +1,7 @@
 // with ES6 import
 import io from 'socket.io-client';
 import moment from 'moment'
+import $ from 'jquery'
 
 
 class Channel{
@@ -34,6 +35,8 @@ class Channel{
             document.querySelector('.msg-block form').addEventListener('submit', this.SetChannelMsg.bind(this))
             document.querySelector('.create-channel-block form').addEventListener('submit', this.CreateChannelRoom.bind(this))
             document.querySelector('.create-private-room-block form').addEventListener('submit', this.GetUserToChat.bind(this))
+
+            document.querySelector('.file-upload-block form').addEventListener('submit', this.UploadFileToChannelRoom.bind(this))
         })
     }
 
@@ -52,6 +55,49 @@ class Channel{
 
     GetUserToChat(event) {
         event.preventDefault();
+    }
+
+    UploadFileToChannelRoom(event) {
+
+        event.preventDefault();
+
+        if (localStorage.getItem('channel_url') != null)
+        {
+            let data = new FormData($("#" + event.target.id)[0]);
+            let that = this
+
+            $.ajax({
+                type: "POST",
+                enctype: 'multipart/form-data',
+                processData: false,  // Important!
+                contentType: false,
+                cache: false,
+                url: $("#" + event.target.id).attr("action"),
+                data: data, 
+                //or your custom data either as object {foo: "bar", ...} or foo=bar&...
+                success: function(response) 
+                {  
+                    console.log(response)
+                    that.SetChannelFileMsg(`<a href='${response.href}'>${response.filename}</a>`) 
+
+                },
+                fail: function(response) {
+                    console.log(response)
+                }
+            });
+        }
+        else
+        {
+            console.error('You have to do click to a room in order to send messages')
+        }     
+    }
+
+    SetChannelFileMsg(filename) 
+    {
+        let message = filename;
+        let timestamp = moment().format('h:mm:ss A')
+        
+        this.socket.emit('set channel msg', {'channel_url': localStorage.getItem('channel_url') ,'message': message, 'timestamp': timestamp });
     }
 
     SetChannelMsg(event) {

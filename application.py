@@ -78,27 +78,27 @@ def chats(channel_room):
 def get_app_view():
     return render_template("chatrooms.html", username = session['username'])
 
-@app.route("/users")
+@app.route("/users", methods = ['GET'])
 def get_users():
-    return jsonify({'success': True, 'message': users })
+    return jsonify({'success': True, 'users': users })
 
-@app.route("/upload/image", methods = ['POST'])
+@app.route("/upload", methods = ['POST'])
 def upload_image():
     # check if the post request has the file part
         if 'file' not in request.files:
-            flash('No file part')
-            return redirect(request.url)
+            return jsonify({'success': False, 'message': 'No file part'})
         file = request.files['file']
         # if user does not select file, browser also
         # submit an empty part without filename
         if file.filename == '':
-            flash('No selected file')
             #return redirect(request.url)
+            return jsonify({'success': False, 'message': 'No selected file'})
         if file and allowed_file(file.filename):
             filename = secure_filename(file.filename)
             file.save(os.path.join(app.config['UPLOAD_FOLDER'], filename))
-            #return redirect(url_for('uploaded_file',
-            #                        filename=filename))
+
+            return jsonify({'success': True, 'message': 'You sucessfully uploaded the file', 
+            'filename': filename, 'href': os.path.join(app.config['UPLOAD_FOLDER'], filename) })
 
 @socketio.on('connect')
 def set_user_settings():
@@ -158,6 +158,11 @@ def set_channel_msgs(data):
 
     requested_channel['channel_msg'].append({'username': username, 'message': message, 'timestamp': timestamp})
     emit("show channel chat", requested_channel, room = requested_channel["channel_name"])
+
+
+@app.route('/uploads/<path:path>')
+def get_uploaded_content(path):
+    return send_from_directory(url_for('static'))
 
 @socketio.on('join')
 def on_join(data):
